@@ -1,11 +1,10 @@
 import {Link, redirect} from "react-router";
 import {ButtonComponent} from "@syncfusion/ej2-react-buttons";
-import {loginWithGoogle} from "~/appwrite/auth";
-import {account} from "~/appwrite/client";
+import {getCurrentAccount, loginWithGoogle} from "~/appwrite/auth";
 
 export async function clientLoader() {
     try {
-        const user = await account.get();
+        const user = await getCurrentAccount();
 
         if(user.$id) return redirect('/');
     } catch (e) {

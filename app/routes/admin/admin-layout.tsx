@@ -1,12 +1,11 @@
 import {Outlet, redirect} from "react-router";
 import {SidebarComponent} from "@syncfusion/ej2-react-navigations";
 import {MobileSidebar, NavItems} from "../../../components";
-import {account} from "~/appwrite/client";
-import {getExistingUser, storeUserData} from "~/appwrite/auth";
+import {getCurrentAccount, getExistingUser, storeUserData} from "~/appwrite/auth";
 
 export async function clientLoader() {
     try {
-        const user = await account.get();
+        const user = await getCurrentAccount();
 
         if(!user.$id) return redirect('/sign-in');
 

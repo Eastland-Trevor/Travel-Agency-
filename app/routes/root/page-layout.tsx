@@ -1,11 +1,10 @@
 import {Outlet, redirect, useNavigate} from "react-router";
-import {getExistingUser, logoutUser, storeUserData} from "~/appwrite/auth";
-import {account} from "~/appwrite/client";
+import {getCurrentAccount, getExistingUser, logoutUser, storeUserData} from "~/appwrite/auth";
 import RootNavbar from "../../../components/RootNavbar";
 
 export async function clientLoader() {
     try {
-        const user = await account.get();
+        const user = await getCurrentAccount();
 
         if(!user.$id) return redirect('/sign-in');
 

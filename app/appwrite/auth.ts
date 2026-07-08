@@ -40,8 +40,10 @@ export const storeUserData = async () => {
         );
 
         if (!createdUser.$id) redirect("/sign-in");
+        return createdUser;
     } catch (error) {
         console.error("Error storing user data:", error);
+        return null;
     }
 };
 
@@ -63,14 +65,31 @@ const getGooglePicture = async (accessToken: string) => {
 
 export const loginWithGoogle = async () => {
     try {
-        account.createOAuth2Session(
+        account.createOAuth2Token(
             OAuthProvider.Google,
-            `${window.location.origin}/`,
+            `${window.location.origin}/auth/callback`,
             `${window.location.origin}/404`
         );
     } catch (error) {
         console.error("Error during OAuth2 session creation:", error);
     }
+};
+
+const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
+
+export const getCurrentAccount = async (retries = 3, delay = 350) => {
+    let lastError: unknown;
+
+    for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+            return await account.get();
+        } catch (error) {
+            lastError = error;
+            if (attempt < retries) await wait(delay);
+        }
+    }
+
+    throw lastError;
 };
 
 export const logoutUser = async () => {
